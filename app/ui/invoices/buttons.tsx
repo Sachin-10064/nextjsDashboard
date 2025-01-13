@@ -1,3 +1,5 @@
+"use client";
+
 import { deleteInvoice } from "@/app/lib/actions";
 import { PencilIcon, PlusIcon, TrashIcon } from "@heroicons/react/24/outline";
 import Link from "next/link";
@@ -26,9 +28,22 @@ export function UpdateInvoice({ id }: { id: string }) {
 }
 
 export function DeleteInvoice({ id }: { id: string }) {
-  const DeleteInvoiceWithId = deleteInvoice.bind(null, id);
+  const handleDelete = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault(); // Prevent the default form submission behavior
+
+    try {
+      // Call deleteInvoice with the invoice ID
+      const response = await deleteInvoice(id);
+
+      if (response) {
+        console.error(response.message); // Handle error if message exists
+      }
+    } catch (error) {
+      console.error("Failed to delete invoice", error);
+    }
+  };
   return (
-    <form action={DeleteInvoiceWithId}>
+    <form onSubmit={handleDelete}>
       <button type="submit" className="rounded-md border p-2 hover:bg-gray-100">
         <span className="sr-only">Delete</span>
         <TrashIcon className="w-5" />
